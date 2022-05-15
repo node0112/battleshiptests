@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Stylesheet" href="./style.css">
+    <script src="./game.js" defer></script>
+    <title>Battlehsip 💣</title>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-text">BATTLESHIP</div>
+            <img class="logo-svg" src="./icons/bomb.svg" style="width: 50px; transform: rotate(90deg);">
+        </div>
+    </div>
+    <div class="content-wrapper">
+        <div class="sidebar">
+            <ul class="links">
+                <li><a>📖 RULES</a></li>
+                <li><a>💻 CODE</a></li>
+                <li><a>OTHER PROJECTS</a></li>
+            </ul>
+        </div>
+        <div class="content-container">
+            <div class="screen1 screen hide">
+                <div class="player-cards">
+                    <div class="player-card">
+                        <div class="player-header" style="color: #779ECB;">GENERAL</div>
+                        <img class="player1-img" src="./icons/player1.svg">
+                        <input class="player1-name input-name" value="Enter Your Name">
+                    </div>
+                    <div class="player-card">
+                        <div class="player-header" style="color: tomato;">GENERAL OPP</div>
+                        <img class="player2-img" src="./icons/player2.svg">
+                        <div class="player-buttons">
+                            <div class="human-btn btn">HUMAN</div>
+                            <div class="computer-btn btn">COMPUTER</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-container">
+                <div class="start-button">START</div>
+            </div>
+
+            </div>
+            <div class="screen2 screen">
+                <div class="player1name">General</div>
+                <div class="grids-container">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

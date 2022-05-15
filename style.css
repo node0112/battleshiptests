@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Macondo&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Koulen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani&display=swap');
+
+
+body{
+    margin: 0;
+    height: 100vh;
+}
+.header{
+    background-color: #779ECB;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.logo-text{
+    font-family: "Macondo",sans-serif;
+    font-size: 50px;
+}
+.content-wrapper{
+    display: flex;
+    height: 90%;
+}
+
+.sidebar{
+    width: 21%;
+    background-color: black;
+    display: flex;
+    box-shadow: 10px 0 10px -8px black;
+    align-items: center;
+}
+ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    font-size: 20px;
+    color: whitesmoke;
+    font-family: 'Patrick hand';    
+    font-size: 40px;
+}
+a{
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+a:hover{
+    color: #779ECB;
+}
+
+
+.content-container{
+    display: flex;
+    justify-content: center;
+    width: 80%;
+}
+.screen{
+    width: 100%;
+    height: 90%;
+}
+.screen1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.player-cards{
+    width: 100%;
+    display: flex;
+    align-items: top;
+    justify-content: center;
+    gap: 25%;
+}
+.player-card{
+    width: 30.5%;
+}
+.player-header{
+    font-family: 'Koulen';
+    text-align: center;
+    font-size: 32px;
+}
+
+.player-buttons{
+    display: flex;
+    font-family: sans-serif;
+    cursor: pointer;
+    height: 40px;
+}
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s;
+    width: 50%;
+    font-size: 150%;
+}
+.computer-btn{
+    color: black;
+    background-color: #779ECB;
+    padding: 5px;
+}
+.human-btn{
+    background-color: black;
+    color: #779ECB;
+}
+input{
+    border: none;
+    background-color: #779ECB;
+    font-size: 150%;
+    overflow: scroll;
+    padding: 3px;
+    width: 100%;
+    text-transform: capitalize;
+}
+.start-button{
+    transition: all 0.5s;
+    font-family: 'Rajdhani';
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 50px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.start-button:hover{
+    color: black;
+    background-color: yellowgreen;
+}
+
+
+.btn:hover{
+    background-color: yellowgreen;
+    color: black;
+}
+.human-btn:hover{
+    width: 80%;
+}
+.computer-btn:hover{
+    width: 80%;
+}
+
+
+.grids-container{
+    display: grid;
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-columns), 1fr);
+    background-color: whitesmoke;
+    width: 40%;
+    height: auto;
+    padding: 0;
+    margin: 50px;
+    flex-grow: 0;
+  }
+  
+.grid-item {
+    aspect-ratio: 1;
+    background-color: whitesmoke;
+    border: none;
+    text-align: center;
+    font-size: 10%;
+}
+
+input:focus{
+    outline: none;
+}
+.hide{
+    display: none;
+}
