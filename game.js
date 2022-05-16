@@ -1,5 +1,6 @@
 
-let shipSelected=3
+let shipSelected=5
+let times=1
 
 
 
@@ -77,7 +78,7 @@ function createArray(){//creates an gameboard1 for the gameboard
             let char=String.fromCharCode(i)
             char=char.toUpperCase()
             for(j=1;j<=10;j++){
-                array[indexCounter]={pos: String(char)+String(j),hit:false, block:"ocean"}
+                array[indexCounter]={pos: String(char)+String(j),hit:false, block:"ocean",status:"enabled"}
                 indexCounter=indexCounter+1
             }
         }
@@ -96,6 +97,7 @@ function findElement(coordinate,array,term){
     let index=findIndex(coordinate,array)
     if(term=="block"){return array[index].block}
     if(term=="hit"){return array[index].hit}
+    if(term=="status"){return array[index].status}
 }
 
 function createPlayer(name){
@@ -126,7 +128,11 @@ function createGrids(array){
         cell.classList.add('grid-item');
         let block=findElement(coordinate,array)
         cell.addEventListener("mouseover",()=>{
-            highlightGrids(cell.id,shipSelected,array)
+            let index=findIndex(cell.id,array)
+            if(array[index].status!="disabled" && array[index].block!="ship"){
+                highlightGrids(cell.id,shipSelected,array)
+            }
+            else{refreshGrid(array)}
         })
         cell.addEventListener('click', ()=>{
             updateGame(array,cell.id,shipSelected)})
@@ -145,24 +151,105 @@ function refreshGrid(array){ // must be passed direct array value
         item.removeEventListener("click",function(){})
         let id=item.id
         let block=findElement(id,array,"block")
+        let status=findElement(id,array,"status")
         if(block=="ocean"){
             item.style.backgroundColor="#779ECB"
         }
         else if(block=="ship"){
-             console.log(block)
             item.style.backgroundColor="tomato"
+        }
+        if(status=="disabled"){
+            item.style.backgroundColor="darkgrey"
         }
     })
 }
 
 function updateGame(array,id,shipSelected){
     let index=findIndex(id,array)
+    if(array[index].status!="disabled"){
+    let number=parseInt(id.charAt(1))
+    let char=id.charAt(0)
+    let startBlock=number-1
+    let endBlock=number+shipSelected
+    if(startBlock<1){startBlock==0}
+    if(endBlock>10){startBlock==11}
     for(let i=0;i<shipSelected;i++){
-        array[index].block="ship"
-        console.log(array[index].block)
-        index=index+1
+        let status=array[index].status
+        if(status=="enabled"){
+            array[index].block="ship"
+            index=index+1
+        }
     }
+    disableBlocks(startBlock,endBlock,char,array)
+    updateShip(array)
     refreshGrid(array)
+}
+}
+function disableBlocks(start,end,char,array){
+    let i
+    let ln
+    if(start==0){i=1}
+    else{i=start}
+    if(end==11){ln=10}
+    else{ln=end}
+    let charAbv=false
+    let charBelow=false
+    if(char!="A"){charAbv=String.fromCharCode(char.charCodeAt()-1)}
+    if(char!="J"){charBelow=String.fromCharCode(char.charCodeAt()+1)}
+    if(start>0){array[findIndex(String(char+start),array)].status="disabled"}
+    if(end<11){array[findIndex(String(char+end),array)].status="disabled"}//for start and end of current grids in the same line as the ship
+    for(i;i<=ln;i++){
+        if(charAbv != false){
+            let upperCoordinate=String(charAbv+i)
+            array[findIndex(upperCoordinate,array)].status="disabled"
+        }
+        if(charBelow != false){
+            let lowerCoordinate=String(charBelow+i)
+            array[findIndex(lowerCoordinate,array)].status="disabled"
+        }
+    }
+}
+function updateShip(array){
+    console.log(shipSelected,times)
+    if(shipSelected==5 || shipSelected==4 || shipSelected==3){
+        shipSelected=shipSelected-1
+        if(shipSelected==4){
+            document.querySelector('#battleship').style.color="yellowgreen"
+        }
+        if(shipSelected==3){
+            document.querySelector('#cruiser').style.color="yellowgreen"
+        }
+        if(shipSelected==2){
+            document.querySelector('#submarine').style.color="yellowgreen"
+        }
+    }
+    if(shipSelected==2 && times<=2){
+        times=times+1
+        shipSelected=2
+    }
+    else if(shipSelected==2 && times==3){
+        shipSelected=1
+        times=1
+        document.querySelector('#destroyer').style.color="yellowgreen"
+    }
+    if(shipSelected==1 && times<=2){
+        times=times+1
+    }
+    else if(shipSelected==1 && times==3){
+        shipSelected=5
+        times=1
+        endArray(array)
+        //function to move on to next step
+    }
+}
+function endArray(array){
+    let ln=array.length
+    for(i=0;i<ln;i++){
+        element=array[i]
+        if(element.block=="ocean" && element.status=="enabled"){
+            element.status="disabled"
+        }
+    }
 }
 function highlightGrids(id,shipSelected,array){
     let number=parseInt(id.charAt(1))
@@ -173,10 +260,13 @@ function highlightGrids(id,shipSelected,array){
     for(let i=0;i<shipSelected;i++){//highlights grids with apppropriate colors by verifying status from gameboard array
         let coordinate=String(char+number)
         let block=findElement(coordinate,array,"block")
-        let hit=findElement(coordinate,array,"hit")
+        let status=findElement(coordinate,array,"status")
         let cell=document.getElementById(coordinate)
-        if(block=="ocean"){
+        if(block=="ocean" && status!="disabled"){
         cell.style.backgroundColor="tomato"
+        }
+        if(status=="disabled"){
+            cell.style.cursor="not-allowed"
         }
         number=number+1
     }
