@@ -80,7 +80,7 @@ function findIndex(element,array){
     }
 }
 
-function createPlayer(name){
+function createPlayer(){
     let points=0
     let wins=0
     let name=name

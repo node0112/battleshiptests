@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Koulen&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,200&display=swap');
 
 body{
     margin: 0;
@@ -14,6 +14,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: default;
 }
 .logo{
     display: flex;
@@ -60,10 +61,11 @@ a:hover{
     display: flex;
     justify-content: center;
     width: 80%;
+    height: 90%;
 }
 .screen{
     width: 100%;
-    height: 90%;
+    height: 100%;
 }
 .screen1{
     display: flex;
@@ -154,7 +156,7 @@ input{
     grid-template-rows: repeat(var(--grid-rows), 1fr);
     grid-template-columns: repeat(var(--grid-columns), 1fr);
     background-color: whitesmoke;
-    width: 40%;
+    width: 55%;
     height: auto;
     padding: 0;
     margin: 50px;
@@ -162,13 +164,53 @@ input{
   }
   
 .grid-item {
+    transition: all 0.2s;
     aspect-ratio: 1;
     background-color: whitesmoke;
     border: none;
     text-align: center;
     font-size: 10%;
+    cursor: pointer;
 }
 
+
+.screen2{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+.player-placer-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.ships{
+    margin-left: 10%;
+    font-family: 'koulen';
+    font-size: 32px;
+    width: 20%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.ship{
+    transition: all 0.7s ease-in-out;
+    cursor: default;
+}
+.player1name{
+    margin-top: 3%;
+    font-family: 'Koulen';
+    text-align: center;
+    font-size: 40px;
+    color: #115097;
+}
+.text-info{
+    font-family: 'roboto flex';
+    font-size: 20px;
+}
 input:focus{
     outline: none;
 }
