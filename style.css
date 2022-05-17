@@ -156,7 +156,7 @@ input{
     grid-template-rows: repeat(var(--grid-rows), 1fr);
     grid-template-columns: repeat(var(--grid-columns), 1fr);
     background-color: whitesmoke;
-    width: 55%;
+    width: 50%;
     height: auto;
     padding: 0;
     margin: 50px;
@@ -178,6 +178,7 @@ input{
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    margin-top: 5%;
 }
 .player-placer-container{
     flex: 1;
@@ -205,7 +206,7 @@ input{
     cursor: pointer;
 }
 .player1name{
-    margin-top: 3%;
+    margin-top: 5%;
     font-family: 'Koulen';
     text-align: center;
     font-size: 40px;

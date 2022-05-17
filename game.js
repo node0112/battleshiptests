@@ -110,18 +110,22 @@ const btns=document.querySelectorAll('.btn')
 btns.forEach(btn =>{
     btn.addEventListener("click",()=>{
         selected=(btn.textContent).toLocaleLowerCase()
+        refreshButtons()
         btn.style.backgroundColor="white"
         setTimeout(()=>{
             btn.style.backgroundColor="yellowgreen"
         },400)
-        
+        function refreshButtons(){
+            document.querySelector('.human-btn').style.backgroundColor="black"
+            document.querySelector('.computer-btn').style.backgroundColor="#779ECB"
+        }
     })
 })
 
 function checkPlayerInput(player){
     let playerElement
     if(player=="player1"){
-        if(document.querySelector('.player1-name').value=='' || selected==false){
+        if(document.querySelector('.player1-name').value=='' || document.querySelector('.player1-name').value=='Enter Your Name' || selected==false){
             return false
         }
     }
@@ -142,6 +146,10 @@ function checkPlayerInput(player){
 start.addEventListener("click",()=>{
     if(checkPlayerInput("player1")==false || checkPlayerInput("player1")==false){
         alert("Please Make Sure Everything Is Selected")
+    }
+    else{
+        document.querySelector(".screen1").classList.add("hide")
+        document.querySelector(".screen2").classList.remove("hide")
     }
 })
 function createGrids(array){
