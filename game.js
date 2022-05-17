@@ -1,13 +1,6 @@
 
 let shipSelected=5
 let times=1
-
-
-
-
-
-
-
 //<------------------------------Game Logic Here--------------------------->
 
 
@@ -70,8 +63,8 @@ function createShip(length,startChar,number){
     return array
 }
 
-function createArray(){//creates an gameboard1 for the gameboard
-    let h,i,j
+function createArray(){//creates a gameboard1 for the gameboard
+    let i,j
     let array=[]
     let indexCounter=0
         for(i=97;i<107;i++){
@@ -107,16 +100,57 @@ function createPlayer(name){
     return { playerName, wins, points }
 }
 
-//<-----------------DAOM LOGIC HERRE---------------------->
+//<-----------------DOM LOGIC HERRE---------------------->
 
+let start=document.querySelector('.start-button')
+let selected=false
 
+const btns=document.querySelectorAll('.btn')
+
+btns.forEach(btn =>{
+    btn.addEventListener("click",()=>{
+        selected=(btn.textContent).toLocaleLowerCase()
+        btn.style.backgroundColor="white"
+        setTimeout(()=>{
+            btn.style.backgroundColor="yellowgreen"
+        },400)
+        
+    })
+})
+
+function checkPlayerInput(player){
+    let playerElement
+    if(player=="player1"){
+        if(document.querySelector('.player1-name').value=='' || selected==false){
+            return false
+        }
+    }
+    if(player=="player2"){
+        if(selected!=false){
+        if(selected=="human"){
+            if(document.querySelector('.player1-name').value=='' || selected==false){
+                return false
+            }
+        }
+        if(selected=="computer"){
+            return true
+        }
+    }
+    }
+}
+
+start.addEventListener("click",()=>{
+    if(checkPlayerInput("player1")==false || checkPlayerInput("player1")==false){
+        alert("Please Make Sure Everything Is Selected")
+    }
+})
 function createGrids(array){
     const grids=document.querySelector('.grids-container')
     grids.style.setProperty('--grid-rows',10)
     grids.style.setProperty('--grid-columns',10)
     let number=1
     let char=97  // declared outside forloop so that it increments
-    for(let i = 1; i <=100; i++) {
+    for(let i = 0; i <=99; i++) {
         if(number==11){
             number=1
             char=char+1
@@ -135,7 +169,22 @@ function createGrids(array){
             else{refreshGrid(array)}
         })
         cell.addEventListener('click', ()=>{
-            updateGame(array,cell.id,shipSelected)})
+            let number=parseInt((cell.id).charAt(1))
+            let char=(cell.id).charAt(0)
+            if(number==1){
+                if(parseInt((cell.id).charAt(2))==0){
+                    number=10
+                }
+            }
+            let addition=number+shipSelected
+            if(addition<=11){
+                let isDisabled=checkPos(array,char,number)
+                if(isDisabled==false){
+                    updateGame(array,cell.id,shipSelected)
+            }
+            }
+        }
+        )
         if(block=="ocean"){
            cell.style.backgroundColor="#779ECB"
         }
@@ -158,25 +207,31 @@ function refreshGrid(array){ // must be passed direct array value
         else if(block=="ship"){
             item.style.backgroundColor="tomato"
         }
-        if(status=="disabled"){
+        if(status=="disabled" && block=="ocean"){
             item.style.backgroundColor="darkgrey"
         }
     })
 }
 
-function updateGame(array,id,shipSelected){
+function updateGame(array,id,shipSelected){//updates game-array and refreshes grid to show placed ships
     let index=findIndex(id,array)
     if(array[index].status!="disabled"){
     let number=parseInt(id.charAt(1))
+    if(number==1){
+        if(parseInt(id.charAt(2))==0){
+            number=10
+        }
+    }
     let char=id.charAt(0)
     let startBlock=number-1
     let endBlock=number+shipSelected
-    if(startBlock<1){startBlock==0}
-    if(endBlock>10){startBlock==11}
+    if(startBlock<1){startBlock=0}
+    if(endBlock==11){endBlock=10}
     for(let i=0;i<shipSelected;i++){
         let status=array[index].status
         if(status=="enabled"){
             array[index].block="ship"
+            array[index].status="disabled"
             index=index+1
         }
     }
@@ -187,17 +242,17 @@ function updateGame(array,id,shipSelected){
 }
 function disableBlocks(start,end,char,array){
     let i
-    let ln
+    let ln=end
     if(start==0){i=1}
     else{i=start}
-    if(end==11){ln=10}
-    else{ln=end}
+    console.log(start)
     let charAbv=false
     let charBelow=false
     if(char!="A"){charAbv=String.fromCharCode(char.charCodeAt()-1)}
     if(char!="J"){charBelow=String.fromCharCode(char.charCodeAt()+1)}
     if(start>0){array[findIndex(String(char+start),array)].status="disabled"}
-    if(end<11){array[findIndex(String(char+end),array)].status="disabled"}//for start and end of current grids in the same line as the ship
+    if(end<10){array[findIndex(String(char+end),array)].status="disabled"}//for start and end of current grids in the same line as the ship
+    console.log(end)
     for(i;i<=ln;i++){
         if(charAbv != false){
             let upperCoordinate=String(charAbv+i)
@@ -210,7 +265,6 @@ function disableBlocks(start,end,char,array){
     }
 }
 function updateShip(array){
-    console.log(shipSelected,times)
     if(shipSelected==5 || shipSelected==4 || shipSelected==3){
         shipSelected=shipSelected-1
         if(shipSelected==4){
@@ -238,6 +292,7 @@ function updateShip(array){
     else if(shipSelected==1 && times==3){
         shipSelected=5
         times=1
+        document.querySelector('.continue-btn').style.color="#779ECB"
         endArray(array)
         //function to move on to next step
     }
@@ -253,21 +308,66 @@ function endArray(array){
 }
 function highlightGrids(id,shipSelected,array){
     let number=parseInt(id.charAt(1))
+    if(number==1){
+        if(parseInt(id.charAt(2))==0){
+            number=10
+        }
+    }
     let char=id.charAt(0)
-    let coordinate=String.fromCharCode
-    let firstgrid=document.getElementById(coordinate)
     refreshGrid(array)
-    for(let i=0;i<shipSelected;i++){//highlights grids with apppropriate colors by verifying status from gameboard array
-        let coordinate=String(char+number)
-        let block=findElement(coordinate,array,"block")
+    if(number+shipSelected>11){
+        for(let i=number;i<11;i++){
+            let no=number
+            let coordinate=String(char+i)
+            let cell=document.getElementById(coordinate)
+            cell.style.backgroundColor="#292929"
+            no=no+1
+        }
+    }
+    if(number+shipSelected<12){//only allows to highlight grids if they are witihin the grid
+        let isDisabled=checkPos(array,char,number)// checks if grid is not in the boundary of another ship
+        if(isDisabled==false){
+            let no=number
+        for(let i=0;i<shipSelected;i++){//highlights grids with apppropriate colors by verifying status from gameboard array
+            let coordinate=String(char+no)
+            let block=findElement(coordinate,array,"block")
+            let status=findElement(coordinate,array,"status")
+            let cell=document.getElementById(coordinate)
+            if(block=="ocean" && status!="disabled"){
+            cell.style.backgroundColor="tomato"
+            }
+            if(status=="disabled" || block=="ship"){
+                cell.style.cursor="not-allowed"
+            }
+            no=no+1
+        }}
+        else{ 
+            let no=number
+            for(let i=0;i<shipSelected;i++){
+                let coordinate=String(char+no)
+                let cell=document.getElementById(coordinate)
+                cell.style.backgroundColor="#292929"
+                no=no+1
+            }
+        }
+    }
+}
+
+function checkPos(array,char,number){
+    let no=number
+    let disabled=0 //if greater than one then selected grid is in the boundary of another ship
+    for(let i=0;i<shipSelected;i++){
+        let coordinate=String(char+no)
         let status=findElement(coordinate,array,"status")
-        let cell=document.getElementById(coordinate)
-        if(block=="ocean" && status!="disabled"){
-        cell.style.backgroundColor="tomato"
-        }
         if(status=="disabled"){
-            cell.style.cursor="not-allowed"
+            disabled=disabled+1
         }
-        number=number+1
+        no=no+1
+    }
+    if(disabled==0){
+        return false
+    }
+    else if(disabled>0){
+        return true
     }
 }

@@ -200,6 +200,10 @@ input{
     transition: all 0.7s ease-in-out;
     cursor: default;
 }
+.continue-btn{
+    transition: all 0.7s;
+    cursor: pointer;
+}
 .player1name{
     margin-top: 3%;
     font-family: 'Koulen';
