@@ -1,6 +1,7 @@
 
 let shipSelected=5
 let times=1
+let gridComplete=false
 //<------------------------------Game Logic Here--------------------------->
 
 
@@ -33,25 +34,47 @@ function ship(battleship){//take in battleship as an gameboard1 with each positi
 
 function gameboard(){
     let array = createArray()
-    const receiveAttack = (target) => {
-        let position=findIndex(target,array)
-        if(array[position].block=="ocean"){
-            let ln=array[position].length //to correlate with ship block
-            //perform function to mark dom element in blue 
-        }
-        else if(array[position].block=="ship"){
-            //findship and mark pos as red
-        }
-        return position
-    }
-    const warOver = ()=>{
-        let status=false
-
-    }
     return {array}
 }
-let gameboard1=gameboard().array
 
+function checkShips(){
+    let array1=player1.array
+    let array2=player2.array
+    let unSunk=0
+    for(let i=0;i<100;i++){
+        if(array2[i].block=="ship" && array2[i].hit==false){
+                unSunk=unSunk+1
+        }
+    }
+    if(unSunk>0){
+        return false
+    }
+    else{
+        return true
+    }
+}
+
+let computerArray = []
+function makeArray(){
+    for(let i=1;i<=100;i++){
+        computerArray[i]=i
+    }
+}
+
+function computerHit(){
+    let array1=player1.array
+    let max=computerArray.length-1
+    function generateRandomInteger(max) {
+        return Math.floor(Math.random() * max);
+    }
+    let chosenNumber=generateRandomInteger(max)
+    let chosenStrike=computerArray[chosenNumber]//stores strike location in a var
+    computerArray.splice(chosenNumber,1)//deletes number from array so that it won't be selected again
+    array1[chosenStrike].hit=true
+    let playerGrid=document.querySelector(".playerGrid")
+    deleteGrid(playerGrid)
+    createGrids(player1.array,"player1")
+}
 function createShip(length,startChar,number){
     let i
     let array=[]
@@ -63,7 +86,7 @@ function createShip(length,startChar,number){
     return array
 }
 
-function createArray(){//creates a gameboard1 for the gameboard
+function createArray(){//creates an array for the game
     let i,j
     let array=[]
     let indexCounter=0
@@ -94,19 +117,37 @@ function findElement(coordinate,array,term){
 }
 
 function createPlayer(name){
+    let array=gameboard().array
     let points=0
     let wins=0
     let playerName=name
-    return { playerName, wins, points }
+    return { array,playerName, wins, points }
 }
 
 //<-----------------DOM LOGIC HERRE---------------------->
 
-let start=document.querySelector('.start-button')
-let selected=false
+let player1
+let player2
+let player1Attack
+let player2Attack
+const start=document.querySelector('.start-button')
+const continueBtn=document.querySelector('.continue-btn')
+const sidebar=document.querySelector('.sidebar')
+const sidebarClosebtn=document.querySelector('.close-sidebar')
+const sidebarOpenBtn=document.querySelector('.open-sidebar')
+const sidebarText=document.querySelector('.links')
+const gameBar=document.querySelector('.info-card')
+const gameBarText=document.querySelector('.opponent-info')
+let selected="computer"  //change to false after completion
+let gameStart=false //used to play animations on the sidebar 
 
 const btns=document.querySelectorAll('.btn')
 
+function deleteGrid(grid){
+    while(grid.hasChildNodes()){
+        grid.removeChild(grid.lastChild)
+    }
+}
 btns.forEach(btn =>{
     btn.addEventListener("click",()=>{
         selected=(btn.textContent).toLocaleLowerCase()
@@ -123,7 +164,6 @@ btns.forEach(btn =>{
 })
 
 function checkPlayerInput(player){
-    let playerElement
     if(player=="player1"){
         if(document.querySelector('.player1-name').value=='' || document.querySelector('.player1-name').value=='Enter Your Name' || selected==false){
             return false
@@ -143,17 +183,190 @@ function checkPlayerInput(player){
     }
 }
 
+//button functions here
 start.addEventListener("click",()=>{
     if(checkPlayerInput("player1")==false || checkPlayerInput("player1")==false){
         alert("Please Make Sure Everything Is Selected")
     }
     else{
+        let player1name=document.querySelector('.player1-name').value
+        let player2name
+        if(selected=="computer"){player2name="computer"}
+        player1=createPlayer(player1name) // creates player and array and grid
+        player1Attack=gameboard()
+        createGrids(player1.array,"default")
+        player2=createPlayer(player2name)
+        player2Attack=gameboard()
+        if(player2name!="computer"){
+            //countdown 3 sec and delete current grid items and constr new grid with player2 array
+        }
         document.querySelector(".screen1").classList.add("hide")
+        document.querySelector(".player1name").textContent=("general "+player1name)
         document.querySelector(".screen2").classList.remove("hide")
     }
 })
-function createGrids(array){
-    const grids=document.querySelector('.grids-container')
+continueBtn.addEventListener('click',()=>{
+    document.querySelector('.screen2').classList.add('hide')
+    document.querySelector('.screen3').classList.remove('hide')//makes screen visible
+    let defContainer=document.querySelector('.grids-container')
+    deleteGrid(defContainer)
+    sidebarClosebtn.style.color="red"
+    gameStart=true
+    sidebarText.classList.add('hide')
+    sidebar.style.width="0%" //closes sidebar
+    createGrids(player1.array,"player1")
+    createGrids(player1Attack.array,"player1-attack")
+    if(selected=="computer"){ //default array for now; random ship placements will be made later on
+        player2=createPlayer('computer')
+        player2.array=[
+         {pos: "A1", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A2", hit: false, block: "ship", status: "disabled"}
+        ,{pos: "A3", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A4", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A5", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A6", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A7", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A8", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A9", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "A10", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "B1", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "B2", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "B3", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "B4", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "B5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "B6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "B7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "B8", hit: false, block: "ship", status: "disabled"}
+        , {pos: "B9", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "B10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C1", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C2", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C3", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C4", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C8", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C9", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "C10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D1", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D2", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D3", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D4", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "D6", hit: false, block: "ship", status: "disabled"}
+        , {pos: "D7", hit: false, block: "ship", status: "disabled"}
+        , {pos: "D8", hit: false, block: "ship", status: "disabled"}
+        ,{pos: "D9", hit: false, block: "ship", status: "disabled"}
+        , {pos: "D10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "E1", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "E2", hit: false, block: "ship", status: "disabled"}
+        ,{pos: "E3", hit: false, block: "ship", status: "disabled"}
+        ,{pos: "E4", hit: false, block: "ship", status: "disabled"}
+        ,{pos: "E5", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "E6", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "E7", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "E8", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "E9", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "E10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F1", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F2", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F3", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F4", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F8", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F9", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "F10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G1", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G2", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G3", hit: false, block: "ship", status: "disabled"}
+        , {pos: "G4", hit: false, block: "ship", status: "disabled"}
+        , {pos: "G5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G8", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "G9", hit: false, block: "ship", status: "disabled"}
+        , {pos: "G10", hit: false, block: "ship", status: "disabled"}
+        , {pos: "H1", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H2", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H3", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H4", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H5", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H8", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H9", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "H10", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "I1", hit: false, block: "ship", status: "disabled"}
+        , {pos: "I2", hit: false, block: "ship", status: "disabled"}
+        , {pos: "I3", hit: false, block: "ship", status: "disabled"}
+        , {pos: "I4", hit: false, block: "ship", status: "disabled"}
+        , {pos: "I5", hit: false, block: "ship", status: "disabled"}
+        , {pos: "I6", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "I7", hit: false, block: "ocean", status: "disabled"}
+        , {pos: "I8", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "I9", hit: false, block: "ocean", status: "disabled"}
+       ,  {pos: "I10", hit: false, block: "ocean", status: "disabled"}
+       ,  {pos: "J1", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J2", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J3", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J4", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J5", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J6", hit: false, block: "ocean", status: "disabled"}
+         ,{pos: "J7", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "J8", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "J9", hit: false, block: "ocean", status: "disabled"}
+        ,{pos: "J10", hit: false, block: "ocean", status: "disabled"}
+        ]
+        makeArray()//makes array with numbers for computer to choose randomly and strike
+    }
+    setTimeout(() => {
+        sidebar.classList.add('hide')
+        gameBar.classList.remove('hide')
+    }, 500);
+})
+sidebarOpenBtn.addEventListener('click',()=>{ //closes current game bar and opens sidebar
+    gameBar.style.width="0%"
+    sidebar.classList.remove('hide')
+    gameBarText.classList.add('hide')
+    setTimeout(() => {
+        gameBar.classList.add('hide')
+        sidebar.style.width="21%"
+        sidebarText.classList.remove('hide')
+    }, 500);
+})
+sidebarClosebtn.addEventListener('click',()=>{
+    if(gameStart==true){
+        sidebarText.classList.add('hide')
+        sidebar.style.width="0%"
+    setTimeout(() => {
+        sidebar.classList.add('hide')
+        gameBar.style.width="21%"
+        gameBarText.classList.remove('hide')
+        gameBar.classList.remove('hide')
+    }, 500);}
+})
+
+
+function createGrids(array,grid){
+    let grids
+    if(grid=="default"){
+        grids=document.querySelector('.grids-container')
+    }
+    else if(grid=="player1"){
+        grids=document.querySelector(".playerGrid")
+    }
+    else if(grid=="player1-attack"){
+        grids=document.querySelector(".attackGrid")
+    }
+    else if(grid=="player2"){
+        grids=document.querySelector(".playerGrid")
+    }
+    else if(grid=="player2-attack"){
+        grids=document.querySelector(".attackGrid")
+    }
     grids.style.setProperty('--grid-rows',10)
     grids.style.setProperty('--grid-columns',10)
     let number=1
@@ -166,19 +379,35 @@ function createGrids(array){
         let cell = document.createElement("div");
         cell.style.border = "1px solid black";
         let coordinate=String(String.fromCharCode(char).toUpperCase()+number)
-        cell.id=coordinate
+        if(grid == "player1" || grid =="player2"){ //this is needed so that the highlight and hover functions don't affect
+            cell.id='disabled'                  //both player and attack grids
+        }
+        else{
+            cell.id=coordinate
+        }
         cell.classList.add('grid-item');
-        let block=findElement(coordinate,array)
-        cell.addEventListener("mouseover",()=>{
+        cell.style.cursor="pointer"
+        let block=findElement(coordinate,array,"block")
+        let hit=findElement(coordinate,array,"hit")
+        if(grid!="player1" && grid!="player2"){
+            cell.addEventListener("mouseover",()=>{
             let index=findIndex(cell.id,array)
+            if(grid=="default"){
             if(array[index].status!="disabled" && array[index].block!="ship"){
-                highlightGrids(cell.id,shipSelected,array)
+                highlightGrids(cell.id,shipSelected,array,"default")
             }
             else{refreshGrid(array)}
+            }
+            if(grid=="player1-attack"){
+                if(checkShips()==false){
+                highlightGrids(cell.id,1,array,"attack-grid")
+            }
+            }
         })
         cell.addEventListener('click', ()=>{
-            let number=parseInt((cell.id).charAt(1))
-            let char=(cell.id).charAt(0)
+            if(grid=="default"){
+                let number=parseInt((cell.id).charAt(1))
+                let char=(cell.id).charAt(0)
             if(number==1){
                 if(parseInt((cell.id).charAt(2))==0){
                     number=10
@@ -190,38 +419,106 @@ function createGrids(array){
                 if(isDisabled==false){
                     updateGame(array,cell.id,shipSelected)
             }
+            }}
+            if(grid=="player1-attack"){
+                if(checkShips()==false){
+                if(selected=="computer"){
+                    let index=findIndex(cell.id,array)
+                    let hit=array[index].hit 
+                    if(hit==false){
+                        computerHit()//function for computer to mark hit
+                    }
+                }
+                let index=findIndex(cell.id,array)
+                array[index].hit=true //sets the hit value of that cell to true
+                array[index].status="disabled"
+                checkElement(cell.id,array,player2.array)
+                refreshGrid(array)
+                console.log(checkShips())
+                if(checkShips()==true){
+                    endArray(player1.array)
+                    endArray(player2.array)
+                    refreshGrid(player2.array)
+                }}
+            }
+            if(grid=="player2-attack"){
+                let index=findIndex(cell.id,array)
+                array[index].hit=true //sets the hit value of that cell to true
+                array[index].status="disabled"
+                checkElement(cell.id,array,player1.array)
+                refreshGrid(array)
+                //show attack on player 1's grid and also hit locations
             }
         }
-        )
-        if(block=="ocean"){
+        )}
+        //these lines of code below give each grid their color
+        if(block=="ocean" ){
            cell.style.backgroundColor="#779ECB"
+        }
+        if(block=="ocean" && hit==true){
+            cell.style.backgroundColor="#292929"
+        }
+        if(block=="ship" && hit==false){
+            cell.style.backgroundColor="yellowgreen"
+        }
+        if(block=="ship" && hit==true){
+            cell.style.backgroundColor="red"
         }
         grids.appendChild(cell);
         number=number+1
         };
 }
-createGrids(gameboard1)
 
 function refreshGrid(array){ // must be passed direct array value
-    items=document.querySelectorAll('.grid-item')
-    items.forEach(item => {
-        item.removeEventListener("click",function(){})
-        let id=item.id
+    for(let i=0;i<100;i++){
+        let id=array[i].pos
+        let cell=document.getElementById(id)
+        cell.textContent=""
         let block=findElement(id,array,"block")
         let status=findElement(id,array,"status")
-        if(block=="ocean"){
-            item.style.backgroundColor="#779ECB"
+        let hit=findElement(id,array,"hit")
+        if(status=="disabled"){// shows a disabled cursor on hover
+            cell.style.cursor="not-allowed"
         }
-        else if(block=="ship"){
-            item.style.backgroundColor="tomato"
+        if(status=="disabled" && block=="ocean" && hit==false){
+            cell.style.backgroundColor="darkgrey"
         }
-        if(status=="disabled" && block=="ocean"){
-            item.style.backgroundColor="darkgrey"
+        if(hit==false){
+            if(block=="ocean" && status=="enabled"){
+                cell.style.backgroundColor="#779ECB"
+            }
+            if(block=="ship" && hit==false){
+                cell.style.backgroundColor="tomato"
+            }
         }
-    })
+        if(hit==true){
+            if(block=="ocean"){
+                cell.style.backgroundColor="#292929"
+                cell.textContent="X"
+            }
+            else if(block=="ship"){
+                cell.style.backgroundColor="tomato"
+            }
+            else if(status=="disabled"){
+                cell.style.backgroundColor="#292929"
+            }
+        }
+    }
+}
+function checkElement(id,array1,array2){//compare hit location with other palyers array and return the type. Use this type for refresh grid!!
+    let index=findIndex(id,array1)
+    if(array2[index].block=="ship"){
+        array1[index].block="ship"
+        array2[index].hit=true
+
+    }
+    else{
+        array1[index].block="ocean"
+        array2[index].hit=true
+    }
 }
 
-function updateGame(array,id,shipSelected){//updates game-array and refreshes grid to show placed ships
+function updateGame(array,id,shipSelected){//updates game-array and refreshes grid to show placed ships; only for start grids
     let index=findIndex(id,array)
     if(array[index].status!="disabled"){
     let number=parseInt(id.charAt(1))
@@ -248,19 +545,17 @@ function updateGame(array,id,shipSelected){//updates game-array and refreshes gr
     refreshGrid(array)
 }
 }
-function disableBlocks(start,end,char,array){
+function disableBlocks(start,end,char,array){//disables blocks around ship
     let i
     let ln=end
     if(start==0){i=1}
     else{i=start}
-    console.log(start)
     let charAbv=false
     let charBelow=false
     if(char!="A"){charAbv=String.fromCharCode(char.charCodeAt()-1)}
     if(char!="J"){charBelow=String.fromCharCode(char.charCodeAt()+1)}
     if(start>0){array[findIndex(String(char+start),array)].status="disabled"}
-    if(end<10){array[findIndex(String(char+end),array)].status="disabled"}//for start and end of current grids in the same line as the ship
-    console.log(end)
+    if(end<11){array[findIndex(String(char+end),array)].status="disabled"}//for start and end of current grids in the same line as the ship
     for(i;i<=ln;i++){
         if(charAbv != false){
             let upperCoordinate=String(charAbv+i)
@@ -298,10 +593,16 @@ function updateShip(array){
         times=times+1
     }
     else if(shipSelected==1 && times==3){
-        shipSelected=5
+        if(player2.playerName=="computer"){
+            shipSelected=1
+        }
+        else{
+            shipSelected=5
+        }
         times=1
         document.querySelector('.continue-btn').style.color="#779ECB"
         endArray(array)
+        gridComplete=true
         //function to move on to next step
     }
 }
@@ -309,21 +610,27 @@ function endArray(array){
     let ln=array.length
     for(i=0;i<ln;i++){
         element=array[i]
-        if(element.block=="ocean" && element.status=="enabled"){
+        if(checkShips()==true){
             element.status="disabled"
         }
+        if(checkShips()==false){
+        if(element.block=="ocean" && element.status=="enabled" && element.hit==false){
+            element.status="disabled"
+        }}
     }
 }
-function highlightGrids(id,shipSelected,array){
+function highlightGrids(id,shipSelected,array,type){
+    document.querySelector('.cell-selected').textContent=id
     let number=parseInt(id.charAt(1))
+    refreshGrid(array)
     if(number==1){
         if(parseInt(id.charAt(2))==0){
             number=10
         }
     }
     let char=id.charAt(0)
-    refreshGrid(array)
-    if(number+shipSelected>11){
+    if(type=="default"){
+        if(number+shipSelected>11){
         for(let i=number;i<11;i++){
             let no=number
             let coordinate=String(char+i)
@@ -358,6 +665,22 @@ function highlightGrids(id,shipSelected,array){
                 no=no+1
             }
         }
+    }}
+    if(type=="attack-grid"){//has a color problem
+        let no=number
+        let coordinate=String(char+no)
+        let cell=document.getElementById(coordinate)
+        let hit=findElement(coordinate,array,"hit")
+        let block=findElement(coordinate,array,"block")
+        let status=findElement(coordinate,array,"status")
+        if(hit==false){
+            cell.style.backgroundColor="#292929"
+            cell.textContent="X"
+        }
+        else if(hit==true){
+            cell.style.backgroundColor="red"
+        }
+        //check if grid is already taken
     }
 }
 
@@ -378,4 +701,8 @@ function checkPos(array,char,number){
     else if(disabled>0){
         return true
     }
+}
+
+function initializePlayArea(){
+
 }

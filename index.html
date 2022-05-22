@@ -18,11 +18,40 @@
     </div>
     <div class="content-wrapper">
         <div class="sidebar">
+            <span class="material-symbols-outlined close-sidebar" style="font-size: 30px;">close</span>
             <ul class="links">
                 <li><a>📖 RULES</a></li>
                 <li><a>💻 CODE</a></li>
                 <li><a>OTHER PROJECTS</a></li>
             </ul>
+        </div>
+        <div class="info-card hide">
+            <div class="opponent-info">
+                <span class="material-symbols-outlined open-sidebar" style="font-size: 40px; margin-left: -7%; cursor: pointer;">menu</span>
+                <div class="div" style="font-family: 'koulen',sans-serif; font-size: 250%; margin-top: 10px; color: tomato;">Opponent Ships:</div>
+                <div class="opponent-ships">
+                    <div id="opponent-carrier">1x Carrier</div>
+                    <div id="opponent-battleship">1x Battleship</div>
+                    <div id="opponent-cruiser">1x Cruiser</div>
+                    <div id="opponent-submarine">2x Submarine</div>
+                    <div id="opponent-destroyer">2x Destroyer</div>
+                </div>
+                <div class="color-markers">
+                    <div style="font-family: 'koulen',sans-serif; font-size: 250%; margin-top: 60px; color: blanchedalmond;">Color Markers:</div>
+                    <div class="color-marker">
+                        <span class="material-symbols-outlined" style="background-color: tomato; color:tomato; font-size: 250%">square</span>
+                        <div class="color-text" style="font-size: 175%;">&nbsp; - Ship Block Hit</div>
+                    </div>
+                    <div class="color-marker">
+                        <span class="material-symbols-outlined" style="background-color: #292929; color:#292929; font-size: 250%">square</span>
+                        <div class="color-text" style="font-size: 175%;">&nbsp; - Ocean Block Hit</div>
+                    </div>
+                    <div class="color-marker">
+                        <span class="material-symbols-outlined" style="background-color: yellowgreen; color:yellowgreen; font-size: 250%">square</span>
+                        <div class="color-text" style="font-size: 175%;">&nbsp; - Your Ships</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="content-container">
             <div class="screen1 screen">
@@ -30,7 +59,7 @@
                     <div class="player-card">
                         <div class="player-header" style="color: #779ECB;">GENERAL</div>
                         <img class="player1-img" src="./icons/player1.svg">
-                        <input class="player1-name input-name" value="Enter Your Name" onclick="value=''">
+                        <input class="player1-name input-name" value="Enter Your " onclick="value=''">
                     </div>
                     <div class="player-card">
                         <div class="player-header" style="color: tomato;">GENERAL OPP</div>
@@ -44,7 +73,6 @@
                 <div class="start-container">
                 <div class="start-button">START</div>
             </div>
-
             </div>
             <div class="screen2 screen hide">
                 <div class="ships">
@@ -60,6 +88,16 @@
                 <div class="text-info">Choose Your Warships' Locations On The Grid</div>
                 <div class="grids-container">
                     </div>
+                </div>
+            </div>
+            <div class="screen3 screen hide">
+                <div class="player-grid-container">
+                    <div class="playerGrid grid" style="border-right: 3px solid red; padding-right:10%;"></div>
+                    <div class="attackGrid grid"></div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <div class="cell-text">Cell Selected:</div>
+                    <div class="cell-selected" style="color: #779ECB; font-size:50px; font-family:'koulen'; margin-top: -3%;"></div>
                 </div>
             </div>
         </div>
