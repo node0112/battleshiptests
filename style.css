@@ -250,6 +250,7 @@ input{
 }
 
 .screen3{
+    transition: all 1s;
     display: flex;
     flex-direction: column;
 }
@@ -273,6 +274,13 @@ input{
 .text-info{
     font-family: 'roboto flex';
     font-size: 20px;
+}
+
+.screen4{
+    display:flex; 
+    flex-direction:column; 
+    align-items:center; 
+    justify-content: center;
 }
 input:focus{
     outline: none;

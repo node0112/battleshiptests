@@ -4,7 +4,8 @@ let times=1
 let gridComplete=false
 //<------------------------------Game Logic Here--------------------------->
 
-
+let winner
+ 
 function ship(battleship){//take in battleship as an gameboard1 with each position having true(numbert hit) or false(hit)
     let sunk=false
     let ln=battleship.length
@@ -50,6 +51,7 @@ function checkShips(){
         return false
     }
     else{
+        winner=player1.playerName
         return true
     }
 }
@@ -400,7 +402,7 @@ function createGrids(array,grid){
             }
             if(grid=="player1-attack"){
                 if(checkShips()==false){
-                highlightGrids(cell.id,1,array,"attack-grid")
+                 highlightGrids(cell.id,1,array,"attack-grid")
             }
             }
         })
@@ -439,6 +441,14 @@ function createGrids(array,grid){
                     endArray(player1.array)
                     endArray(player2.array)
                     refreshGrid(player2.array)
+                    document.querySelector('.winner').textContent="General " + winner;
+                    setTimeout(() => {
+                        document.querySelector('.screen3').style.opacity="0"
+                    }, 500);
+                    setTimeout(() => {
+                    document.querySelector('.screen3').classList.add('hide')
+                    document.querySelector('.screen4').classList.remove('hide')
+                    }, 1500);
                 }}
             }
             if(grid=="player2-attack"){
