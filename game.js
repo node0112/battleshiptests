@@ -341,13 +341,14 @@ sidebarOpenBtn.addEventListener('click',()=>{ //closes current game bar and open
 })
 sidebarClosebtn.addEventListener('click',()=>{
     if(gameStart==true){
-        sidebarText.classList.add('hide')
         sidebar.style.width="0%"
+        sidebarText.classList.add('hide')
+        gameBar.classList.remove('hide')
+        gameBarText.classList.add('hide')
     setTimeout(() => {
         sidebar.classList.add('hide')
         gameBar.style.width="21%"
         gameBarText.classList.remove('hide')
-        gameBar.classList.remove('hide')
     }, 500);}
 })
 
