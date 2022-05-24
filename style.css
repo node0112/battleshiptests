@@ -294,3 +294,7 @@ input:focus{
 .hide{
     display: none;
 }
+
+a{
+    color: whitesmoke;
+}
