@@ -140,7 +140,7 @@ const sidebarOpenBtn=document.querySelector('.open-sidebar')
 const sidebarText=document.querySelector('.links')
 const gameBar=document.querySelector('.info-card')
 const gameBarText=document.querySelector('.opponent-info')
-let selected="computer"  //change to false after completion
+let selected=false
 let gameStart=false //used to play animations on the sidebar 
 
 const btns=document.querySelectorAll('.btn')
@@ -152,7 +152,9 @@ function deleteGrid(grid){
 }
 btns.forEach(btn =>{
     btn.addEventListener("click",()=>{
-        selected=(btn.textContent).toLocaleLowerCase()
+        console.log(btn.textContent.toLowerCase())
+        if(btn.textContent.toLowerCase()=="computer"){
+        selected=(btn.textContent).toLowerCase()
         refreshButtons()
         btn.style.backgroundColor="white"
         setTimeout(()=>{
@@ -161,6 +163,9 @@ btns.forEach(btn =>{
         function refreshButtons(){
             document.querySelector('.human-btn').style.backgroundColor="black"
             document.querySelector('.computer-btn').style.backgroundColor="#779ECB"
+        }}
+        else{
+            alert("Please Select Computer For Now, Multiplayer Is Still In Developement")
         }
     })
 })
@@ -187,7 +192,7 @@ function checkPlayerInput(player){
 
 //button functions here
 start.addEventListener("click",()=>{
-    if(checkPlayerInput("player1")==false || checkPlayerInput("player1")==false){
+    if(checkPlayerInput("player1")==false || checkPlayerInput("player2")==false){
         alert("Please Make Sure Everything Is Selected")
     }
     else{
@@ -208,6 +213,8 @@ start.addEventListener("click",()=>{
     }
 })
 continueBtn.addEventListener('click',()=>{
+    if(continueBtn.style.color=="rgb(119, 158, 203)")
+    {
     document.querySelector('.screen2').classList.add('hide')
     document.querySelector('.screen3').classList.remove('hide')//makes screen visible
     let defContainer=document.querySelector('.grids-container')
@@ -327,29 +334,38 @@ continueBtn.addEventListener('click',()=>{
     setTimeout(() => {
         sidebar.classList.add('hide')
         gameBar.classList.remove('hide')
-    }, 500);
+    }, 500);}
+    else{
+        alert("Please Make Sure You Have Placed All The Ships")
+    }
 })
 sidebarOpenBtn.addEventListener('click',()=>{ //closes current game bar and opens sidebar
     gameBar.style.width="0%"
-    sidebar.classList.remove('hide')
     gameBarText.classList.add('hide')
+    sidebarText.classList.add('hide')
     setTimeout(() => {
+        sidebar.classList.remove('hide')
         gameBar.classList.add('hide')
-        sidebar.style.width="21%"
-        sidebarText.classList.remove('hide')
+        gameBarText.classList.remove('hide')
     }, 500);
+    setTimeout(() => {
+        sidebar.style.width="100%"
+        sidebarText.classList.remove('hide')
+    }, 600);
 })
 sidebarClosebtn.addEventListener('click',()=>{
     if(gameStart==true){
         sidebar.style.width="0%"
         sidebarText.classList.add('hide')
-        gameBar.classList.remove('hide')
         gameBarText.classList.add('hide')
+        gameBar.classList.remove('hide')
     setTimeout(() => {
         sidebar.classList.add('hide')
-        gameBar.style.width="21%"
-        gameBarText.classList.remove('hide')
+        gameBar.style.width="100%"
     }, 500);}
+    setTimeout(() => {
+        gameBarText.classList.remove('hide')
+    }, 600);
 })
 
 
@@ -442,7 +458,7 @@ function createGrids(array,grid){
                     endArray(player1.array)
                     endArray(player2.array)
                     refreshGrid(player2.array)
-                    document.querySelector('.winner').textContent="General " + winner;
+                    document.querySelector('.winner').textContent="General " + winner+"!!";
                     setTimeout(() => {
                         document.querySelector('.screen3').style.opacity="0"
                     }, 500);
